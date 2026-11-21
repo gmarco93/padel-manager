@@ -808,6 +808,20 @@ function configurarMenu() {
             boton.classList.add("active");
         });
     });
+}function configurarTipoPartido() {
+    const botones = document.querySelectorAll(".tipo-partido-btn");
+    const campoTipo = document.getElementById("tipo");
+
+    botones.forEach(boton => {
+        boton.addEventListener("click", () => {
+
+            campoTipo.value = boton.dataset.tipo;
+
+            botones.forEach(b => b.classList.remove("seleccionado"));
+
+            boton.classList.add("seleccionado");
+        });
+    });
 }
 function mostrarInicio() {
     document.querySelectorAll("#app > section").forEach(seccion => {
@@ -1294,6 +1308,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 document.getElementById("fecha-compra-pala")
     .addEventListener("change", calcularPrevisionCambioPala);
     configurarMenu();
+configurarTipoPartido();
 mostrarInicio();
 document.getElementById("fecha-overgrip")
     .addEventListener("change", actualizarEstadoOvergrip);

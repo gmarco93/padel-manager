@@ -1475,3 +1475,35 @@ footer {
     color: #00FF88;
     font-size: 14px;
 }
+/* SELECTOR DE TIPO DE PARTIDO */
+
+.selector-tipo-partido {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 12px;
+}
+
+.tipo-partido-btn {
+    padding: 22px 15px;
+    border-radius: 16px;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.tipo-partido-btn:hover {
+    transform: translateY(-3px);
+    border-color: #00FF88;
+}
+
+.tipo-partido-btn.seleccionado {
+    background: rgba(0, 255, 136, 0.10);
+    border-color: #00FF88;
+    color: #00FF88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.12);
+}

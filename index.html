@@ -139,16 +139,23 @@
                 <label for="club">Club</label>
                 <input type="text" id="club" placeholder="¿Dónde has jugado?" required>
             </div>
+<div class="campo">
+    <label>Tipo de partido</label>
 
-            <div class="campo">
-                <label for="tipo">Tipo de partido</label>
-                <select id="tipo" required>
-                    <option value="">Selecciona el tipo</option>
-                    <option value="Amistoso">Amistoso</option>
-                    <option value="Torneo">Torneo</option>
-                </select>
-            </div>
+    <div class="selector-tipo-partido">
 
+        <button type="button" class="tipo-partido-btn" data-tipo="Amistoso">
+            🎾 Amistoso
+        </button>
+
+        <button type="button" class="tipo-partido-btn" data-tipo="Torneo">
+            🏆 Torneo
+        </button>
+
+    </div>
+
+    <input type="hidden" id="tipo" required>
+</div>
             <div class="campo">
                 <label for="duracion">Duración aproximada</label>
                 <select id="duracion" required>
