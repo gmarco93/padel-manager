@@ -129,16 +129,6 @@
         <h3>Registrar nuevo partido</h3>
 
         <form id="form-partido">
-
-            <div class="campo">
-                <label for="fecha">Fecha del partido</label>
-                <input type="date" id="fecha" required>
-            </div>
-
-            <div class="campo">
-                <label for="club">Club</label>
-                <input type="text" id="club" placeholder="¿Dónde has jugado?" required>
-            </div>
 <div class="campo">
     <label>Tipo de partido</label>
 
@@ -155,7 +145,56 @@
     </div>
 
     <input type="hidden" id="tipo" required>
+    <!-- DATOS DEL TORNEO -->
+<div id="datos-torneo" class="datos-torneo" style="display: none;">
+
+    <h3>🏆 Información del torneo</h3>
+
+    <div class="campo">
+        <label for="nombre-torneo">Nombre del torneo</label>
+        <input
+            type="text"
+            id="nombre-torneo"
+            placeholder="Ej. Torneo de invierno"
+        >
+    </div>
+
+    <div class="campo">
+        <label for="fase-torneo">Fase de competición</label>
+
+        <select id="fase-torneo">
+            <option value="">Selecciona la fase</option>
+            <option value="Fase de grupos">Fase de grupos</option>
+            <option value="Dieciseisavos">Dieciseisavos</option>
+            <option value="Octavos">Octavos de final</option>
+            <option value="Cuartos">Cuartos de final</option>
+            <option value="Semifinal">Semifinal</option>
+            <option value="Final">Final</option>
+            <option value="Otra">Otra</option>
+        </select>
+    </div>
+
+    <div class="campo">
+        <label for="jornada-torneo">Grupo / Jornada</label>
+        <input
+            type="text"
+            id="jornada-torneo"
+            placeholder="Ej. Grupo B · Jornada 2"
+        >
+    </div>
+
 </div>
+</div>
+            <div class="campo">
+                <label for="fecha">Fecha del partido</label>
+                <input type="date" id="fecha" required>
+            </div>
+
+            <div class="campo">
+                <label for="club">Club</label>
+                <input type="text" id="club" placeholder="¿Dónde has jugado?" required>
+            </div>
+
             <div class="campo">
                 <label for="duracion">Duración aproximada</label>
                 <select id="duracion" required>
@@ -286,6 +325,75 @@
 
                 </div>
             </div>
+
+<!-- ANÁLISIS PERSONAL -->
+<div class="analisis-partido">
+
+    <h3>🧠 Análisis personal</h3>
+    <p>Reflexiona sobre tu rendimiento en este partido.</p>
+
+    <div class="campo">
+        <label for="sensaciones-partido">
+            ¿Cómo te has sentido?
+        </label>
+
+        <select id="sensaciones-partido">
+            <option value="">Sin valorar</option>
+            <option value="🔥 Excelente">🔥 Excelente</option>
+            <option value="😃 Muy bien">😃 Muy bien</option>
+            <option value="🙂 Bien">🙂 Bien</option>
+            <option value="😐 Normal">😐 Normal</option>
+            <option value="😕 Mal">😕 Mal</option>
+        </select>
+    </div>
+
+    <div class="campo">
+        <label for="valoracion-partido">
+            Valoración personal
+        </label>
+
+        <div class="valoracion-control">
+            <input
+                type="range"
+                id="valoracion-partido"
+                min="1"
+                max="10"
+                value="5"
+            >
+
+            <span id="valoracion-actual">5/10</span>
+        </div>
+
+<div class="campo">
+    <label for="puntos-fuertes">💪 Puntos fuertes</label>
+    <textarea
+        id="puntos-fuertes"
+        placeholder="Ej. Buena defensa, buenos globos, comunicación..."
+        rows="3"
+    ></textarea>
+</div>
+
+<div class="campo">
+    <label for="aspectos-mejorar">🎯 Aspectos a mejorar</label>
+    <textarea
+        id="aspectos-mejorar"
+        placeholder="Ej. Mejorar la volea, evitar errores no forzados..."
+        rows="3"
+    ></textarea>
+</div>
+
+<div class="campo">
+    <label for="observaciones-partido">📝 Observaciones</label>
+    <textarea
+        id="observaciones-partido"
+        placeholder="Detalles que quieras recordar de este partido..."
+        rows="3"
+    ></textarea>
+</div>
+
+    </div>
+
+</div>
 
             <button type="submit" class="guardar-partido">
                 Guardar partido

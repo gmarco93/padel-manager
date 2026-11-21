@@ -1480,30 +1480,204 @@ footer {
 .selector-tipo-partido {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-top: 12px;
+    gap: 22px;
+    margin-top: 18px;
 }
 
 .tipo-partido-btn {
-    padding: 22px 15px;
-    border-radius: 16px;
-    border: 2px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 17px;
-    font-weight: 700;
+    min-height: 145px;
+    padding: 30px 20px;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    font-size: 23px;
+    font-weight: 800;
     cursor: pointer;
     transition: all 0.25s ease;
 }
 
-.tipo-partido-btn:hover {
-    transform: translateY(-3px);
-    border-color: #00FF88;
+/* FONDO AMISTOSO */
+.tipo-partido-btn[data-tipo="Amistoso"] {
+    background: linear-gradient(145deg, #D9FFF0, #B8F5DC);
+    color: #087A50;
+    border-color: #8CEBC2;
 }
 
+/* FONDO TORNEO */
+.tipo-partido-btn[data-tipo="Torneo"] {
+    background: linear-gradient(145deg, #DCEBFA, #BBD8F5);
+    color: #174B7A;
+    border-color: #9BC7EF;
+}
+
+/* EFECTO AL PASAR EL RATÓN */
+.tipo-partido-btn:hover {
+    transform: translateY(-4px);
+}
+
+/* BOTÓN SELECCIONADO */
 .tipo-partido-btn.seleccionado {
-    background: rgba(0, 255, 136, 0.10);
-    border-color: #00FF88;
+    border: 3px solid #00FF88;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.25);
+    transform: translateY(-3px);
+}
+/* ANÁLISIS PERSONAL */
+
+.analisis-partido {
+    margin-top: 30px;
+    padding: 25px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #172B4D, #223D61);
+    border: 1px solid rgba(0, 255, 136, 0.18);
+}
+
+.analisis-partido h3 {
     color: #00FF88;
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.12);
+    margin-bottom: 10px;
+}
+
+.analisis-partido > p {
+    color: #CBD5E1;
+    margin-bottom: 22px;
+}
+
+.valoracion-control {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.valoracion-control input {
+    flex: 1;
+    height: 10px;
+    border-radius: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+
+    /* Degradado rojo → amarillo → verde */
+    background: linear-gradient(
+        to right,
+        #ff3b30 0%,
+        #ffcc00 50%,
+        #00FF88 100%
+    );
+}
+
+/* Círculo que se desplaza por la barra */
+.valoracion-control input::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #00FF88;
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+}
+
+.valoracion-control input::-moz-range-thumb {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #00FF88;
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+}
+
+#valoracion-actual {
+    color: #00FF88;
+    font-size: 22px;
+    font-weight: 800;
+    min-width: 55px;
+    text-align: right;
+}
+
+#valoracion-actual {
+    color: #00FF88;
+    font-size: 22px;
+    font-weight: 800;
+    min-width: 45px;
+}
+
+/* ANÁLISIS PERSONAL EN HISTORIAL */
+.analisis-historial {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(0, 255, 136, 0.07);
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.analisis-historial h5 {
+    color: #00FF88;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.analisis-historial p {
+    color: var(--text);
+    margin: 6px 0;
+    font-size: 14px;
+}
+
+.fila-valoracion-historial {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.fila-valoracion-historial strong {
+    color: #00FF88;
+    min-width: 42px;
+    font-size: 17px;
+}
+.barra-valoracion-historial {
+    flex: 1;
+    height: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #DCE5E1;
+}
+
+.progreso-valoracion-historial {
+    height: 100%;
+    border-radius: 10px;
+    margin-left: 0;
+    transition: width 0.3s ease;
+}
+
+/* CAMPOS DEL ANÁLISIS PERSONAL */
+.analisis-partido textarea {
+    width: 100%;
+    min-height: 85px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    background: #102039;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.analisis-partido textarea:focus {
+    outline: none;
+    border-color: #00FF88;
+    box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.12);
+}
+
+.analisis-partido textarea::placeholder {
+    color: #94A3B8;
+}
+/* Preguntas del análisis personal */
+.analisis-partido .campo label {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.analisis-partido textarea::placeholder {
+    color: #CBD5E1;
+    opacity: 1;
 }

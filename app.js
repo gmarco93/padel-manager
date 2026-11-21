@@ -253,7 +253,17 @@ async function gestionarFormulario(event) {
             club: document.getElementById("club").value.trim(),
             tipo: document.getElementById("tipo").value,
             duracion: Number(document.getElementById("duracion").value),
+            puntosFuertes: document.getElementById("puntos-fuertes").value.trim(),
+aspectosMejorar: document.getElementById("aspectos-mejorar").value.trim(),
+observaciones: document.getElementById("observaciones-partido").value.trim(),
 
+            // Análisis personal
+sensaciones: document.getElementById("sensaciones-partido").value,
+valoracion: Number(document.getElementById("valoracion-partido").value),
+    // Información del torneo
+    nombreTorneo: document.getElementById("nombre-torneo").value.trim(),
+    faseTorneo: document.getElementById("fase-torneo").value,
+    jornadaTorneo: document.getElementById("jornada-torneo").value.trim(),
             // Jugadores del partido
             companero: {
                 id: companero.id,
@@ -286,7 +296,13 @@ async function gestionarFormulario(event) {
         ) {
             throw new Error("Completa todos los datos del partido.");
         }
-
+if (partido.tipo === "Torneo") {
+    if (!partido.nombreTorneo || !partido.faseTorneo) {
+        throw new Error(
+            "Indica el nombre del torneo y la fase de competición."
+        );
+    }
+}
         await guardarPartido(partido);
 
         alert(
@@ -303,7 +319,14 @@ async function gestionarFormulario(event) {
         console.error(error);
     }
 }
+function configurarValoracionPartido() {
+    const valoracion = document.getElementById("valoracion-partido");
+    const indicador = document.getElementById("valoracion-actual");
 
+    valoracion.addEventListener("input", () => {
+        indicador.textContent = `${valoracion.value}/10`;
+    });
+}
 // ==========================================
 // MOSTRAR HISTORIAL
 // ==========================================
@@ -343,6 +366,7 @@ function mostrarHistorial(partidos) {
         const fecha = new Date(partido.fecha + "T00:00:00");
         const fechaTexto = fecha.toLocaleDateString("es-ES");
 
+        // Nombre del club y fecha
         tarjeta.appendChild(
             crearElemento("h4", partido.club)
         );
@@ -354,7 +378,26 @@ function mostrarHistorial(partidos) {
             )
         );
 
-        // Alineaciones del partido
+        // Información del torneo
+        if (partido.tipo === "Torneo" && partido.nombreTorneo) {
+            tarjeta.appendChild(
+                crearElemento("p", `🏆 ${partido.nombreTorneo}`)
+            );
+
+            if (partido.faseTorneo) {
+                tarjeta.appendChild(
+                    crearElemento("p", `Fase: ${partido.faseTorneo}`)
+                );
+            }
+
+            if (partido.jornadaTorneo) {
+                tarjeta.appendChild(
+                    crearElemento("p", `Grupo / Jornada: ${partido.jornadaTorneo}`)
+                );
+            }
+        }
+
+        // Alineaciones
         if (partido.companero && partido.rivales) {
             const alineacion = document.createElement("div");
             alineacion.className = "alineacion-historial";
@@ -424,6 +467,81 @@ function mostrarHistorial(partidos) {
                 victoria ? "resultado-victoria" : "resultado-derrota"
             )
         );
+
+        // Análisis personal
+        if (
+            partido.sensaciones ||
+            partido.valoracion ||
+            partido.puntosFuertes ||
+            partido.aspectosMejorar ||
+            partido.observaciones
+        ) {
+            const analisis = document.createElement("div");
+            analisis.className = "analisis-historial";
+
+            analisis.appendChild(
+                crearElemento("h5", "🧠 Análisis personal")
+            );
+
+            if (partido.sensaciones) {
+                analisis.appendChild(
+                    crearElemento("p", `Sensaciones: ${partido.sensaciones}`)
+                );
+            }
+
+            if (partido.valoracion) {
+                const filaValoracion = document.createElement("div");
+                filaValoracion.className = "fila-valoracion-historial";
+
+                filaValoracion.appendChild(
+                    crearElemento("strong", `${partido.valoracion}/10`)
+                );
+
+                const barra = document.createElement("div");
+                barra.className = "barra-valoracion-historial";
+
+                const progreso = document.createElement("div");
+                progreso.className = "progreso-valoracion-historial";
+
+        const valor = Number(partido.valoracion);
+
+progreso.style.width = `${valor * 10}%`;
+
+if (valor <= 4) {
+    progreso.style.background = "#FF3B30";
+} else if (valor <= 6) {
+    progreso.style.background = "#FFCC00";
+} else if (valor <= 9) {
+    progreso.style.background = "#00FF88";
+} else {
+    progreso.style.background = "#2196F3";
+}
+
+                barra.appendChild(progreso);
+                filaValoracion.appendChild(barra);
+                analisis.appendChild(filaValoracion);
+            }
+
+            if (partido.puntosFuertes) {
+                analisis.appendChild(
+                    crearElemento("p", `💪 Puntos fuertes: ${partido.puntosFuertes}`)
+                );
+            }
+
+            if (partido.aspectosMejorar) {
+                analisis.appendChild(
+                    crearElemento("p", `🎯 A mejorar: ${partido.aspectosMejorar}`)
+                );
+            }
+
+            if (partido.observaciones) {
+                analisis.appendChild(
+                    crearElemento("p", `📝 Observaciones: ${partido.observaciones}`)
+                );
+            }
+
+            tarjeta.appendChild(analisis);
+        }
 
         contenedor.appendChild(tarjeta);
     });
@@ -808,18 +926,28 @@ function configurarMenu() {
             boton.classList.add("active");
         });
     });
-}function configurarTipoPartido() {
+}
+function configurarTipoPartido() {
     const botones = document.querySelectorAll(".tipo-partido-btn");
     const campoTipo = document.getElementById("tipo");
+    const datosTorneo = document.getElementById("datos-torneo");
 
     botones.forEach(boton => {
         boton.addEventListener("click", () => {
 
+            // Guardar el tipo seleccionado
             campoTipo.value = boton.dataset.tipo;
 
+            // Actualizar selección visual
             botones.forEach(b => b.classList.remove("seleccionado"));
-
             boton.classList.add("seleccionado");
+
+            // Mostrar u ocultar datos del torneo
+            if (campoTipo.value === "Torneo") {
+                datosTorneo.style.display = "block";
+            } else {
+                datosTorneo.style.display = "none";
+            }
         });
     });
 }
@@ -1309,7 +1437,9 @@ document.getElementById("fecha-compra-pala")
     .addEventListener("change", calcularPrevisionCambioPala);
     configurarMenu();
 configurarTipoPartido();
+configurarValoracionPartido();
 mostrarInicio();
+
 document.getElementById("fecha-overgrip")
     .addEventListener("change", actualizarEstadoOvergrip);
 cargarEquipamientoEnPantalla();
