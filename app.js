@@ -56,7 +56,6 @@ async function obtenerPartidos() {
         solicitud.onerror = () => reject(solicitud.error);
     });
 }
-
 async function guardarPartido(partido) {
     const db = await abrirBaseDatos();
 
@@ -64,12 +63,175 @@ async function guardarPartido(partido) {
         const transaccion = db.transaction("partidos", "readwrite");
         const almacen = transaccion.objectStore("partidos");
 
-        almacen.add(partido);
+        // Si tiene ID, actualiza. Si no, crea uno nuevo.
+        if (partido.id !== undefined && partido.id !== null) {
+            almacen.put(partido);
+        } else {
+            almacen.add(partido);
+        }
 
         transaccion.oncomplete = () => resolve();
         transaccion.onerror = () => reject(transaccion.error);
         transaccion.onabort = () => reject(transaccion.error);
     });
+}
+async function eliminarPartido(id) {
+    const db = await abrirBaseDatos();
+
+    return new Promise((resolve, reject) => {
+        const transaccion = db.transaction("partidos", "readwrite");
+        const almacen = transaccion.objectStore("partidos");
+
+        almacen.delete(id);
+
+        transaccion.oncomplete = () => resolve();
+        transaccion.onerror = () => reject(transaccion.error);
+        transaccion.onabort = () => reject(transaccion.error);
+    });
+}
+function editarPartido(partido) {
+    const formulario = document.getElementById("form-partido");
+
+    // Guardar el partido que estamos editando
+    partidoEnEdicion = partido;
+
+    // Recuperar los datos generales
+    document.getElementById("fecha").value = partido.fecha || "";
+    document.getElementById("club").value = partido.club || "";
+    document.getElementById("duracion").value = partido.duracion || "";
+
+    // Recuperar el tipo de partido
+    document.getElementById("tipo").value = partido.tipo || "";
+
+    const botonesTipo = document.querySelectorAll(".tipo-partido-btn");
+
+    botonesTipo.forEach(boton => {
+        boton.classList.toggle(
+            "seleccionado",
+            boton.dataset.tipo === partido.tipo
+        );
+    });
+
+    // Mostrar u ocultar los datos del torneo
+    document.getElementById("datos-torneo").style.display =
+        partido.tipo === "Torneo" ? "block" : "none";
+
+    document.getElementById("nombre-torneo").value =
+        partido.nombreTorneo || "";
+
+    document.getElementById("fase-torneo").value =
+        partido.faseTorneo || "";
+
+    document.getElementById("jornada-torneo").value =
+        partido.jornadaTorneo || "";
+
+    // Recuperar los jugadores
+    document.getElementById("compañero-partido").value =
+        partido.companero?.id ?? "";
+
+    document.getElementById("rival1-partido").value =
+        partido.rivales?.[0]?.id ?? "";
+
+    document.getElementById("rival2-partido").value =
+        partido.rivales?.[1]?.id ?? "";
+
+    // Recuperar los marcadores de los sets
+    const tarjetas = document.querySelectorAll(".set-card");
+
+    tarjetas.forEach((tarjeta, indice) => {
+        const set = partido.sets?.[indice];
+
+        tarjeta.querySelector(".juegos-local").value =
+            set ? set.local : "";
+
+        tarjeta.querySelector(".juegos-rival").value =
+            set ? set.rival : "";
+
+        tarjeta.querySelector(".tb-local").value =
+            set?.tbLocal ?? "";
+
+        tarjeta.querySelector(".tb-rival").value =
+            set?.tbRival ?? "";
+    });
+
+    // Recuperar el análisis personal
+    document.getElementById("sensaciones-partido").value =
+        partido.sensaciones || "";
+
+    const valoracion = partido.valoracion || 5;
+
+    document.getElementById("valoracion-partido").value = valoracion;
+    document.getElementById("valoracion-actual").textContent =
+        `${valoracion}/10`;
+
+    document.getElementById("puntos-fuertes").value =
+        partido.puntosFuertes || "";
+
+    document.getElementById("aspectos-mejorar").value =
+        partido.aspectosMejorar || "";
+
+    document.getElementById("observaciones-partido").value =
+        partido.observaciones || "";
+
+    // Cambiar el texto del botón de guardar
+    const botonGuardar = formulario.querySelector(
+        'button[type="submit"]'
+    );
+
+    botonGuardar.textContent = "Guardar cambios";
+
+    // Crear el botón de cancelar si todavía no existe
+    let botonCancelar = document.getElementById("cancelar-edicion");
+
+    if (!botonCancelar) {
+        botonCancelar = document.createElement("button");
+        botonCancelar.type = "button";
+        botonCancelar.id = "cancelar-edicion";
+        botonCancelar.className = "cancelar-edicion";
+        botonCancelar.textContent = "Cancelar edición";
+
+        botonGuardar.insertAdjacentElement("afterend", botonCancelar);
+
+        botonCancelar.addEventListener("click", cancelarEdicionPartido);
+    }
+
+    botonCancelar.style.display = "block";
+
+    // Llevar al formulario
+    formulario.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+function cancelarEdicionPartido() {
+    partidoEnEdicion = null;
+
+    const formulario = document.getElementById("form-partido");
+
+    formulario.reset();
+
+    // Limpiar selección del tipo de partido
+    document.querySelectorAll(".tipo-partido-btn").forEach(boton => {
+        boton.classList.remove("seleccionado");
+    });
+
+    document.getElementById("datos-torneo").style.display = "none";
+
+    // Restablecer valoración
+    document.getElementById("valoracion-actual").textContent = "5/10";
+
+    // Restablecer botón de guardar
+    formulario.querySelector('button[type="submit"]').textContent =
+        "Guardar partido";
+
+    // Ocultar botón de cancelar
+    const botonCancelar = document.getElementById("cancelar-edicion");
+
+    if (botonCancelar) {
+        botonCancelar.style.display = "none";
+    }
 }
 
 // ==========================================
@@ -253,17 +415,19 @@ async function gestionarFormulario(event) {
             club: document.getElementById("club").value.trim(),
             tipo: document.getElementById("tipo").value,
             duracion: Number(document.getElementById("duracion").value),
-            puntosFuertes: document.getElementById("puntos-fuertes").value.trim(),
-aspectosMejorar: document.getElementById("aspectos-mejorar").value.trim(),
-observaciones: document.getElementById("observaciones-partido").value.trim(),
 
             // Análisis personal
-sensaciones: document.getElementById("sensaciones-partido").value,
-valoracion: Number(document.getElementById("valoracion-partido").value),
-    // Información del torneo
-    nombreTorneo: document.getElementById("nombre-torneo").value.trim(),
-    faseTorneo: document.getElementById("fase-torneo").value,
-    jornadaTorneo: document.getElementById("jornada-torneo").value.trim(),
+            puntosFuertes: document.getElementById("puntos-fuertes").value.trim(),
+            aspectosMejorar: document.getElementById("aspectos-mejorar").value.trim(),
+            observaciones: document.getElementById("observaciones-partido").value.trim(),
+            sensaciones: document.getElementById("sensaciones-partido").value,
+            valoracion: Number(document.getElementById("valoracion-partido").value),
+
+            // Información del torneo
+            nombreTorneo: document.getElementById("nombre-torneo").value.trim(),
+            faseTorneo: document.getElementById("fase-torneo").value,
+            jornadaTorneo: document.getElementById("jornada-torneo").value.trim(),
+
             // Jugadores del partido
             companero: {
                 id: companero.id,
@@ -281,12 +445,20 @@ valoracion: Number(document.getElementById("valoracion-partido").value),
                 }
             ],
 
+            // Resultado
             sets: marcador.sets,
             resultado: marcador.resultado,
             setsLocal: marcador.setsLocal,
             setsRival: marcador.setsRival,
+
             creado: new Date().toISOString()
         };
+
+        // Si estamos editando, conservar el ID y la fecha de creación
+        if (partidoEnEdicion) {
+            partido.id = partidoEnEdicion.id;
+            partido.creado = partidoEnEdicion.creado;
+        }
 
         if (
             !partido.fecha ||
@@ -302,18 +474,21 @@ if (partido.tipo === "Torneo") {
             "Indica el nombre del torneo y la fase de competición."
         );
     }
-}
-        await guardarPartido(partido);
+}const estabaEditando = Boolean(partidoEnEdicion);
 
-        alert(
-            partido.resultado === "victoria"
-                ? "¡Victoria de TEAM GUILLEM! Partido guardado. 🎾"
-                : "Partido guardado. ¡A por el siguiente! 💪"
-        );
+await guardarPartido(partido);
 
-        formulario.reset();
-        await actualizarAplicacion();
+alert(
+    estabaEditando
+        ? "¡Partido actualizado correctamente! 🎾"
+        : partido.resultado === "victoria"
+            ? "¡Victoria de TEAM GUILLEM! Partido guardado. 🎾"
+            : "Partido guardado. ¡A por el siguiente! 💪"
+);
 
+cancelarEdicionPartido();
+
+await actualizarAplicacion();
     } catch (error) {
         alert(error.message || "No se ha podido guardar el partido.");
         console.error(error);
@@ -341,7 +516,6 @@ function crearElemento(etiqueta, texto, clase) {
 
     return elemento;
 }
-
 function mostrarHistorial(partidos) {
     const contenedor = document.getElementById("lista-partidos");
     contenedor.innerHTML = "";
@@ -359,14 +533,42 @@ function mostrarHistorial(partidos) {
 
     partidos.sort((a, b) => b.fecha.localeCompare(a.fecha));
 
-    partidos.forEach(partido => {
+    // Separar amistosos y torneos
+    const amistosos = partidos.filter(
+        partido => partido.tipo === "Amistoso"
+    );
+
+    const torneos = partidos.filter(
+        partido => partido.tipo === "Torneo"
+    );
+
+    // Agrupar torneos por nombre y año
+    const torneosAgrupados = {};
+
+    torneos.forEach(partido => {
+        const nombre = partido.nombreTorneo || "Torneo sin nombre";
+        const año = partido.fecha.substring(0, 4);
+        const clave = `${nombre}-${año}`;
+
+        if (!torneosAgrupados[clave]) {
+            torneosAgrupados[clave] = {
+                nombre,
+                año,
+                partidos: []
+            };
+        }
+
+        torneosAgrupados[clave].partidos.push(partido);
+    });
+
+    // FUNCIÓN PARA CREAR CADA TARJETA
+    function crearTarjetaPartido(partido) {
         const tarjeta = document.createElement("article");
         tarjeta.className = "historial-card";
 
         const fecha = new Date(partido.fecha + "T00:00:00");
         const fechaTexto = fecha.toLocaleDateString("es-ES");
 
-        // Nombre del club y fecha
         tarjeta.appendChild(
             crearElemento("h4", partido.club)
         );
@@ -379,11 +581,7 @@ function mostrarHistorial(partidos) {
         );
 
         // Información del torneo
-        if (partido.tipo === "Torneo" && partido.nombreTorneo) {
-            tarjeta.appendChild(
-                crearElemento("p", `🏆 ${partido.nombreTorneo}`)
-            );
-
+        if (partido.tipo === "Torneo") {
             if (partido.faseTorneo) {
                 tarjeta.appendChild(
                     crearElemento("p", `Fase: ${partido.faseTorneo}`)
@@ -503,19 +701,19 @@ function mostrarHistorial(partidos) {
                 const progreso = document.createElement("div");
                 progreso.className = "progreso-valoracion-historial";
 
-        const valor = Number(partido.valoracion);
+                const valor = Number(partido.valoracion);
 
-progreso.style.width = `${valor * 10}%`;
+                progreso.style.width = `${valor * 10}%`;
 
-if (valor <= 4) {
-    progreso.style.background = "#FF3B30";
-} else if (valor <= 6) {
-    progreso.style.background = "#FFCC00";
-} else if (valor <= 9) {
-    progreso.style.background = "#00FF88";
-} else {
-    progreso.style.background = "#2196F3";
-}
+                if (valor <= 4) {
+                    progreso.style.background = "#FF3B30";
+                } else if (valor <= 6) {
+                    progreso.style.background = "#FFCC00";
+                } else if (valor <= 9) {
+                    progreso.style.background = "#00FF88";
+                } else {
+                    progreso.style.background = "#2196F3";
+                }
 
                 barra.appendChild(progreso);
                 filaValoracion.appendChild(barra);
@@ -542,11 +740,118 @@ if (valor <= 4) {
 
             tarjeta.appendChild(analisis);
         }
+        // Botones de editar y eliminar
+        const acciones = document.createElement("div");
+        acciones.className = "acciones-historial";
 
-        contenedor.appendChild(tarjeta);
-    });
+        const botonEditar = document.createElement("button");
+        botonEditar.type = "button";
+        botonEditar.className = "boton-editar-partido";
+        botonEditar.textContent = "✏️ Editar";
+
+        botonEditar.addEventListener("click", () => {
+            editarPartido(partido);
+        });
+
+        const botonEliminar = document.createElement("button");
+        botonEliminar.type = "button";
+        botonEliminar.className = "boton-eliminar-partido";
+        botonEliminar.textContent = "🗑️ Eliminar";
+
+        botonEliminar.addEventListener("click", async () => {
+           const nombresRivales = partido.rivales
+    ? partido.rivales.map(r => r.nombre).join(" y ")
+    : "estos rivales";
+
+const confirmar = confirm(
+    "¿Seguro que quieres eliminar el partido contra " +
+    nombresRivales + "?"
+);
+
+            if (!confirmar) return;
+
+            try {
+                await eliminarPartido(partido.id);
+                await actualizarAplicacion();
+
+                // Si se elimina el partido que estábamos editando
+                if (partidoEnEdicion?.id === partido.id) {
+                    cancelarEdicionPartido();
+                }
+
+                alert("Partido eliminado correctamente. 🗑️");
+
+            } catch (error) {
+                console.error(error);
+                alert("No se ha podido eliminar el partido.");
+            }
+        });
+
+        acciones.appendChild(botonEditar);
+        acciones.appendChild(botonEliminar);
+
+        tarjeta.appendChild(acciones);
+        return tarjeta;
+    }
+
+    // MOSTRAR AMISTOSOS
+    if (amistosos.length > 0) {
+        contenedor.appendChild(
+            crearElemento("h3", "🎾 Partidos amistosos")
+        );
+
+        amistosos.forEach(partido => {
+            contenedor.appendChild(
+                crearTarjetaPartido(partido)
+            );
+        });
+    }
+
+    // MOSTRAR TORNEOS AGRUPADOS
+    if (Object.keys(torneosAgrupados).length > 0) {
+        contenedor.appendChild(
+            crearElemento("h3", "🏆 Mis torneos")
+        );
+
+        Object.values(torneosAgrupados).forEach(torneo => {
+            const bloqueTorneo = document.createElement("div");
+            bloqueTorneo.className = "bloque-torneo-historial";
+
+            bloqueTorneo.appendChild(
+                crearElemento(
+                    "h4",
+                    `🏆 ${torneo.nombre} · ${torneo.año}`
+                )
+            );
+// Balance del torneo
+const victorias = torneo.partidos.filter(
+    partido => partido.resultado === "victoria"
+).length;
+
+const derrotas = torneo.partidos.filter(
+    partido => partido.resultado === "derrota"
+).length;
+
+const balance = document.createElement("p");
+balance.className = "balance-torneo";
+
+balance.textContent =
+    `🎾 ${torneo.partidos.length} partidos · ` +
+    `🟢 ${victorias} victorias · ` +
+    `🔴 ${derrotas} derrotas`;
+
+bloqueTorneo.appendChild(balance);
+            torneo.partidos.forEach(partido => {
+                bloqueTorneo.appendChild(
+                    crearTarjetaPartido(partido)
+                );
+            });
+
+            contenedor.appendChild(bloqueTorneo);
+        });
+    }
 }
-
+let partidoEnEdicion = null;
 async function mostrarHistorialEquipamiento() {
     const datos = await obtenerEquipamiento();
 

@@ -1681,3 +1681,88 @@ footer {
     color: #CBD5E1;
     opacity: 1;
 }
+/* ==========================================
+   BLOQUES DE TORNEOS EN EL HISTORIAL
+========================================== */
+
+.bloque-torneo-historial {
+    margin-top: 24px;
+    margin-bottom: 35px;
+    padding: 20px;
+    border: 1px solid #DCE5EF;
+    border-radius: 18px;
+    background: #F8FAFC;
+}
+
+.bloque-torneo-historial > h4 {
+    margin: 0 0 22px 0;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #E2E8F0;
+    color: #174B7A;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.bloque-torneo-historial .historial-card {
+    margin-bottom: 20px;
+}
+
+.bloque-torneo-historial .historial-card:last-child {
+    margin-bottom: 0;
+}
+/* BALANCE DE TORNEOS */
+
+.balance-torneo {
+    display: inline-block;
+    margin: 0 0 20px 0;
+    padding: 10px 15px;
+    border-radius: 12px;
+    background: #EAF2FA;
+    color: #174B7A;
+    font-size: 14px;
+    font-weight: 700;
+    border: 1px solid #D3E3F3;
+}
+/* ACCIONES DEL HISTORIAL */
+
+.acciones-historial {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.boton-editar-partido,
+.boton-eliminar-partido,
+.cancelar-edicion {
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s ease;
+}
+
+.boton-editar-partido {
+    background: #E0F2FE;
+    color: #075985;
+}
+
+.boton-eliminar-partido {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+.cancelar-edicion {
+    display: none;
+    margin-top: 10px;
+    background: #E2E8F0;
+    color: #334155;
+}
+
+.boton-editar-partido:hover,
+.boton-eliminar-partido:hover,
+.cancelar-edicion:hover {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+}
