@@ -1,0 +1,465 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#10251f">
+
+    <title>Padel Manager | Guillem</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>🎾 PADEL MANAGER</h1>
+        <p>Tu historial. Tu evolución. Tu pádel.</p>
+    </header>
+
+<nav class="menu">
+    <button class="menu-btn active" data-seccion="inicio">Inicio</button>
+    <button class="menu-btn" data-seccion="partidos">Partidos</button>
+    <button class="menu-btn" data-seccion="jugadores">Jugadores</button>
+    <button class="menu-btn" data-seccion="estadisticas">Estadísticas</button>
+    <button class="menu-btn" data-seccion="equipamiento">Equipamiento</button>
+</nav>
+
+    <main id="app">
+
+        <section id="inicio">
+            <h2>¡Hola, Guillem!</h2>
+            <p>Bienvenido a tu espacio personal de pádel.</p>
+        </section>
+
+<section id="estadisticas">
+    <h2>Mi temporada</h2>
+    <p class="subtitulo-estadisticas">El rendimiento de TEAM GUILLEM, partido a partido.</p>
+
+    <!-- FILTROS -->
+    <div class="filtros-estadisticas">
+        <label for="filtro-estadisticas">Consultar temporada:</label>
+        <select id="filtro-estadisticas">
+            <option value="todos">Todos los partidos</option>
+            <option value="amistoso">Amistosos</option>
+            <option value="torneo">Torneos</option>
+        </select>
+    </div>
+
+    <!-- RESUMEN PRINCIPAL -->
+    <div class="stats">
+        <article>
+            <span id="total-partidos">0</span>
+            <p>Partidos</p>
+        </article>
+
+        <article>
+            <span id="victorias">0</span>
+            <p>Victorias</p>
+        </article>
+
+        <article>
+            <span id="derrotas">0</span>
+            <p>Derrotas</p>
+        </article>
+
+        <article>
+            <span id="porcentaje-victorias">0%</span>
+            <p>Victorias %</p>
+        </article>
+    </div>
+
+    <!-- RACHA -->
+    <div class="bloque-temporada">
+        <h3>🔥 Mi racha</h3>
+        <div id="racha-actual" class="racha-actual">
+            Todavía no hay datos
+        </div>
+    </div>
+
+    <!-- BALANCE DE SETS -->
+    <div class="bloque-temporada">
+        <h3>🎾 Balance de sets</h3>
+        <div class="balance-sets">
+            <article>
+                <span id="sets-favor">0</span>
+                <p>Sets ganados</p>
+            </article>
+            <article>
+                <span id="sets-contra">0</span>
+                <p>Sets perdidos</p>
+            </article>
+        </div>
+    </div>
+
+    <!-- EVOLUCIÓN MENSUAL -->
+    <div class="bloque-temporada">
+        <h3>📈 Evolución mensual</h3>
+        <div id="grafico-mensual" class="grafico-mensual">
+            <p>Tu evolución aparecerá aquí.</p>
+        </div>
+    </div>
+
+    <!-- COMPAÑEROS -->
+    <div class="bloque-temporada">
+        <h3>🤝 Mis compañeros</h3>
+        <div id="ranking-companeros">
+            <p>Próximamente aparecerán tus estadísticas con cada compañero.</p>
+        </div>
+    </div>
+
+    <!-- RIVALES -->
+    <div class="bloque-temporada">
+        <h3>⚔️ Mis rivales</h3>
+        <div id="ranking-rivales">
+            <p>Próximamente aparecerán tus enfrentamientos.</p>
+        </div>
+    </div>
+</section>
+
+        
+
+<section id="partidos">
+    <div class="section-heading">
+        <h2>Mis partidos</h2>
+        <p>Registra tus encuentros y sigue tu evolución.</p>
+    </div>
+
+    <div class="formulario-partido">
+        <h3>Registrar nuevo partido</h3>
+
+        <form id="form-partido">
+
+            <div class="campo">
+                <label for="fecha">Fecha del partido</label>
+                <input type="date" id="fecha" required>
+            </div>
+
+            <div class="campo">
+                <label for="club">Club</label>
+                <input type="text" id="club" placeholder="¿Dónde has jugado?" required>
+            </div>
+
+            <div class="campo">
+                <label for="tipo">Tipo de partido</label>
+                <select id="tipo" required>
+                    <option value="">Selecciona el tipo</option>
+                    <option value="Amistoso">Amistoso</option>
+                    <option value="Torneo">Torneo</option>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="duracion">Duración aproximada</label>
+                <select id="duracion" required>
+                    <option value="">Selecciona la duración</option>
+                    <option value="60">1 hora</option>
+                    <option value="90">1 hora y media</option>
+                    <option value="120">2 horas</option>
+                </select>
+            </div>
+
+<!-- JUGADORES DEL PARTIDO -->
+<div class="seleccion-jugadores">
+    <h3>👥 ¿Quién juega hoy?</h3>
+
+    <div class="campo">
+        <label for="compañero-partido">Tu compañero · TEAM GUILLEM</label>
+        <select id="compañero-partido" required>
+            <option value="">Selecciona tu compañero</option>
+        </select>
+    </div>
+
+    <div class="campo">
+        <label for="rival1-partido">Rival 1</label>
+        <select id="rival1-partido" required>
+            <option value="">Selecciona el primer rival</option>
+        </select>
+    </div>
+
+    <div class="campo">
+        <label for="rival2-partido">Rival 2</label>
+        <select id="rival2-partido" required>
+            <option value="">Selecciona el segundo rival</option>
+        </select>
+    </div>
+</div>
+
+            <div class="marcador">
+                <h3>Resultado del partido</h3>
+
+                <div class="equipos">
+                    <div class="equipo equipo-local">
+                        <span>TEAM GUILLEM</span>
+                        <small>Tú y tu compañero</small>
+                    </div>
+
+                    <div class="equipo equipo-rival">
+                        <span>RIVALES</span>
+                        <small>Pareja contraria</small>
+                    </div>
+                </div>
+
+                <div id="sets-container">
+
+                    <div class="set-card">
+                        <h4>SET 1</h4>
+
+                        <div class="resultado-set">
+                            <input type="number" min="0" max="7"
+                                class="juegos-local" placeholder="0" required>
+
+                            <span>–</span>
+
+                            <input type="number" min="0" max="7"
+                                class="juegos-rival" placeholder="0" required>
+                        </div>
+
+                        <div class="tiebreak">
+                            <label>Tie-break (opcional)</label>
+                            <div class="resultado-tiebreak">
+                                <input type="number" min="0" max="30"
+                                    class="tb-local" placeholder="Team Guillem">
+                                <span>–</span>
+                                <input type="number" min="0" max="30"
+                                    class="tb-rival" placeholder="Rivales">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="set-card">
+                        <h4>SET 2</h4>
+
+                        <div class="resultado-set">
+                            <input type="number" min="0" max="7"
+                                class="juegos-local" placeholder="0" required>
+
+                            <span>–</span>
+
+                            <input type="number" min="0" max="7"
+                                class="juegos-rival" placeholder="0" required>
+                        </div>
+
+                        <div class="tiebreak">
+                            <label>Tie-break (opcional)</label>
+                            <div class="resultado-tiebreak">
+                                <input type="number" min="0" max="30"
+                                    class="tb-local" placeholder="Team Guillem">
+                                <span>–</span>
+                                <input type="number" min="0" max="30"
+                                    class="tb-rival" placeholder="Rivales">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="set-card">
+                        <h4>SET 3 · OPCIONAL</h4>
+
+                        <div class="resultado-set">
+                            <input type="number" min="0" max="7"
+                                class="juegos-local" placeholder="0">
+
+                            <span>–</span>
+
+                            <input type="number" min="0" max="7"
+                                class="juegos-rival" placeholder="0">
+                        </div>
+
+                        <div class="tiebreak">
+                            <label>Tie-break (opcional)</label>
+                            <div class="resultado-tiebreak">
+                                <input type="number" min="0" max="30"
+                                    class="tb-local" placeholder="Team Guillem">
+                                <span>–</span>
+                                <input type="number" min="0" max="30"
+                                    class="tb-rival" placeholder="Rivales">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <button type="submit" class="guardar-partido">
+                Guardar partido
+            </button>
+
+        </form>
+    </div>
+
+    <div id="lista-partidos">
+        <h3>Historial de partidos</h3>
+        <p>Todavía no has registrado ningún partido.</p>
+    </div>
+</section>
+
+
+
+
+<section id="jugadores">
+    <div class="section-heading">
+        <h2>Jugadores</h2>
+        <p>Tu equipo, tus compañeros y tus rivales.</p>
+    </div>
+
+    <div class="formulario-partido">
+        <h3>Añadir jugador</h3>
+
+        <form id="form-jugador">
+            <div class="campo">
+                <label for="nombre-jugador">Nombre del jugador</label>
+                <input
+                    type="text"
+                    id="nombre-jugador"
+                    placeholder="Escribe su nombre"
+                    required
+                >
+            </div>
+
+            <div class="campo">
+                <label for="tipo-jugador">Tipo de jugador</label>
+                <select id="tipo-jugador" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="compañero">Compañero</option>
+                    <option value="rival">Rival</option>
+                </select>
+            </div>
+
+            <button type="submit" class="guardar-partido">
+                Añadir jugador
+            </button>
+        </form>
+    </div>
+
+    <div class="lista-jugadores">
+        <div class="grupo-jugadores">
+            <h3>💚 TEAM GUILLEM</h3>
+            <div id="lista-companeros"></div>
+        </div>
+
+        <div class="grupo-jugadores">
+            <h3>⚔️ RIVALES</h3>
+            <div id="lista-rivales"></div>
+        </div>
+    </div>
+</section>
+
+
+<section id="equipamiento">
+    <h2>Mi equipamiento</h2>
+    <p>Todo mi material para competir y disfrutar del pádel.</p>
+
+    <!-- MI PALA -->
+    <div class="bloque-equipamiento">
+        <div class="cabecera-equipamiento">
+            <h3>🎾 Mi pala</h3>
+            <span>Material principal</span>
+        </div>
+
+        <div class="foto-equipamiento">
+            <img id="foto-pala" src="" alt="Fotografía de mi pala">
+            <label for="archivo-pala" class="boton-foto">
+                📷 Añadir fotografía
+            </label>
+            <input type="file" id="archivo-pala" accept="image/*">
+        </div>
+<div class="estadisticas-material">
+
+    <div class="contador-material">
+        <span class="icono-contador">🎾</span>
+        <div>
+            <strong id="partidos-pala">0</strong>
+            <span>Partidos con esta pala</span>
+        </div>
+    </div>
+
+    <div class="contador-material">
+        <span class="icono-contador">🔄</span>
+        <div>
+            <strong id="partidos-overgrip">0</strong>
+            <span>Partidos desde el overgrip</span>
+        </div>
+    </div>
+
+</div>
+        <div class="formulario-equipamiento">
+            <label for="nombre-pala">Marca y modelo</label>
+            <input type="text" id="nombre-pala" placeholder="Ej. StarVie Metheora Pro Touch">
+
+<label for="fecha-compra-pala">Fecha de compra</label>
+<input type="date" id="fecha-compra-pala">
+
+<label for="prevision-cambio-pala">Previsión de cambio de pala (10 meses)</label>
+<input type="date" id="prevision-cambio-pala" readonly>
+
+<label for="fecha-overgrip">Último cambio de overgrip</label>
+
+            <input type="date" id="fecha-overgrip">
+<div id="estado-overgrip" class="estado-overgrip">
+    <span id="texto-overgrip">Introduce la fecha del cambio</span>
+</div>
+            <button type="button" id="guardar-pala">
+                Guardar mi pala
+            </button>
+        </div>
+    </div>
+
+    <!-- MIS ZAPATILLAS -->
+    <div class="bloque-equipamiento">
+        <div class="cabecera-equipamiento">
+            <h3>👟 Mis zapatillas</h3>
+            <span>Calzado deportivo</span>
+        </div>
+
+        <div class="foto-equipamiento">
+            <img id="foto-zapatillas" src="" alt="Fotografía de mis zapatillas">
+            <label for="archivo-zapatillas" class="boton-foto">
+                📷 Añadir fotografía
+            </label>
+            <input type="file" id="archivo-zapatillas" accept="image/*">
+        </div>
+
+        <div class="formulario-equipamiento">
+            <label for="nombre-zapatillas">Marca y modelo</label>
+            <input type="text" id="nombre-zapatillas" placeholder="Ej. ASICS Gel Padel">
+
+            <label for="fecha-compra-zapatillas">Fecha de compra</label>
+            <input type="date" id="fecha-compra-zapatillas">
+
+            <button type="button" id="guardar-zapatillas">
+                Guardar mis zapatillas
+            </button>
+        </div>
+    </div>
+    <!-- HISTORIAL DE EQUIPAMIENTO -->
+<section id="historial-equipamiento">
+    <h2>📚 Mi historial</h2>
+    <p>Un recorrido por todo el material que me ha acompañado en la pista.</p>
+
+    <div class="bloque-equipamiento historial-equipamiento">
+        <div class="historial-categoria">
+            <h3>🎾 Mis palas anteriores</h3>
+            <div id="historial-palas">
+                <p class="historial-vacio">Todavía no hay palas anteriores.</p>
+            </div>
+        </div>
+
+        <div class="historial-categoria">
+            <h3>👟 Mis zapatillas anteriores</h3>
+            <div id="historial-zapatillas">
+                <p class="historial-vacio">Todavía no hay zapatillas anteriores.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    </main>
+
+    <footer>
+        <p>Padel Manager © 2026 · Guillem</p>
+    </footer>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
